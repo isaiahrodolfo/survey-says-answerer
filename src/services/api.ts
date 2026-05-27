@@ -8,6 +8,7 @@ export type User = {
 export type Question = {
   id: number;
   question: string;
+  answerer_id: number;
 };
 
 export type QuestionAnswer = {
@@ -21,20 +22,12 @@ export type SurveySubmission = {
 };
 
 export const fetchUsers = async (): Promise<User[]> => {
-  const result = await supabase
+  const { data, error } = await supabase
     .from("users")
     .select("id, name")
     .order("name", { ascending: true });
 
-  console.log("Supabase result:", result);
-
-  const { data, error } = result;
-
-  // log the data
-  console.log("Supabase data:", data);
-
   if (error) {
-    console.error("Supabase error:", error);
     throw error;
   }
 
@@ -44,7 +37,7 @@ export const fetchUsers = async (): Promise<User[]> => {
 export const fetchQuestions = async (): Promise<Question[]> => {
   const { data, error } = await supabase
     .from("questions")
-    .select("id, question")
+    .select("id, question, answerer_id")
     .order("id", { ascending: true });
 
   if (error) {
