@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchUsers, type User } from "../services/api";
 
 const NamePage = () => {
-  const [userId, setUserId] = useState("");
+  const [userId, setUserId] = useState<number>(0);
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -31,13 +31,16 @@ const NamePage = () => {
       return;
     }
 
+    console.log("userId", userId);
+    console.log("users", users);
+
     const selectedUser = users.find((user) => user.id === userId);
     if (!selectedUser) {
       alert("Please select a valid user");
       return;
     }
 
-    localStorage.setItem("userId", selectedUser.id);
+    localStorage.setItem("userId", String(selectedUser.id)); // Must be string for localStorage
     localStorage.setItem("userName", selectedUser.name);
 
     navigate("/questions");
@@ -52,7 +55,7 @@ const NamePage = () => {
           <select
             className="name-input"
             value={userId}
-            onChange={(e) => setUserId(e.target.value)}
+            onChange={(e) => setUserId(Number(e.target.value))}
             disabled={isLoading}
           >
             <option value="">Select a name</option>

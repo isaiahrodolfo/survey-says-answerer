@@ -1,7 +1,7 @@
 import { supabase } from "../utils/supabase";
 
 export type User = {
-  id: string;
+  id: number;
   name: string;
 };
 
@@ -29,6 +29,9 @@ export const fetchUsers = async (): Promise<User[]> => {
   console.log("Supabase result:", result);
 
   const { data, error } = result;
+
+  // log the data
+  console.log("Supabase data:", data);
 
   if (error) {
     console.error("Supabase error:", error);
