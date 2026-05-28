@@ -17,7 +17,7 @@ export type QuestionAnswer = {
 };
 
 export type SurveySubmission = {
-  userId: string;
+  userId: number;
   answers: QuestionAnswer[];
 };
 
@@ -50,10 +50,32 @@ export const fetchQuestions = async (): Promise<Question[]> => {
 export const submitSurvey = async (
   payload: SurveySubmission,
 ): Promise<void> => {
-  const { error } = await supabase.from("survey_submissions").insert({
-    user_id: payload.userId,
-    answers: payload.answers,
-  });
+  // delete existing answers for this user to avoid duplicates
+  const { error: deleteError } = await supabase
+    .from("answers")
+    .delete()
+    .eq("user_id", payload.userId);
+
+  if (deleteError) {
+    throw deleteError;
+  }
+
+  // transform the nested answers into a flat array of rows for insertion
+  const rows = payload.answers.flatMap(({ questionId, answers }) =>
+    answers
+      .filter((answerText) => answerText.trim().length > 0)
+      .map((answerText) => ({
+        user_id: payload.userId,
+        question_id: questionId,
+        answer_text: answerText,
+      })),
+  );
+
+  if (rows.length === 0) {
+    return;
+  }
+
+  const { error } = await supabase.from("answers").insert(rows);
 
   if (error) {
     throw error;

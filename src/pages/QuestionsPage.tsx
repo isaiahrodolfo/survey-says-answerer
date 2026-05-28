@@ -68,13 +68,13 @@ const QuestionsPage = () => {
       }));
 
       await submitSurvey({
-        userId,
+        userId: Number(userId),
         answers: answersArray,
       });
 
       localStorage.removeItem("userId");
       localStorage.removeItem("userName");
-      navigate("/");
+      navigate("/success");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to submit survey");
       setIsSubmitting(false);
