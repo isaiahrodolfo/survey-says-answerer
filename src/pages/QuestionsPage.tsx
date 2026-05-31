@@ -29,7 +29,7 @@ const QuestionsPage = () => {
 
     const loadQuestions = async () => {
       try {
-        const questionList = await fetchQuestions();
+        const questionList = await fetchQuestions(Number(userId));
         setQuestions(questionList);
       } catch (err) {
         setFetchError(

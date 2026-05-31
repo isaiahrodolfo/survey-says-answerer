@@ -34,10 +34,11 @@ export const fetchUsers = async (): Promise<User[]> => {
   return data ?? [];
 };
 
-export const fetchQuestions = async (): Promise<Question[]> => {
+export const fetchQuestions = async (userId: number): Promise<Question[]> => {
   const { data, error } = await supabase
     .from("questions")
     .select("id, question, answerer_id")
+    .neq("answerer_id", userId)
     .order("id", { ascending: true });
 
   if (error) {
