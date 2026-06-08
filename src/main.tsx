@@ -6,7 +6,8 @@ import "./App.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <BrowserRouter basename="/survey-says-answerer">
+    {/* <BrowserRouter basename="/survey-says-answerer"> */}
+    <BrowserRouter>
       <App />
     </BrowserRouter>
   </React.StrictMode>,
